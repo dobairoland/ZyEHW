@@ -5,6 +5,11 @@ Evolvable hardware in the Zynq FPGA platform
 The project will be released soon, hopefully, as the part of a submission to 
 [FPL2014](http://www.fpl2014.org/).
 
+## Contact
+
+You can contact me if you have any questions. My contacts are available on [my
+web page](http://www.fit.vutbr.cz/~dobai/index.php.en).
+
 ## License
 
 Copyright (C) 2014  Roland Dobai
