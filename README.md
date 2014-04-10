@@ -14,7 +14,7 @@ our papers if you want to find out more about our methods.
 Currently, ZyEHW is able to evolve *image filters* only. Our intention is to
 include more case studies in the near future.
 
-### Who can benefit from ZyEHW?
+## Who can benefit from ZyEHW?
 
 1. If you are interested in *image filtering* then you can create a complete
 hardware system for evolving image filters. Image filters are evolved based on
