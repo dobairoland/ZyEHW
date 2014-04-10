@@ -1,9 +1,59 @@
 # ZyEHW
 
-Evolvable hardware in the Zynq FPGA platform
+ZyEHW is a joint hardware-software project for evolutionary design in the
+Xilinx Zynq-7000 all programmable (AP) system-on-chip (SoC) platform. The name
+ZyEHW is a concatenation of the first two letters of Zynq and the acronym for
+evolvable hardware (EHW).
 
-The project will be released soon, hopefully, as the part of a submission to 
-[FPL2014](http://www.fpl2014.org/).
+ZyEHW is the result of our ongoing research and intends to demonstrate our
+scientific results. Some of these results were already published (you can find
+a list related publications in this file). More papers will follow soon. ZyEHW
+does not contain the descriptions of our developed methods. Please read our
+papers if you want to find out more about our methods.
+
+Currently, ZyEHW is able to evolve *image filters* only. Our intention is to
+include more case studies in the near future.
+
+# Who can benefit from ZyEHW?
+
+1. If you are interested in *image filtering* then you can create a complete
+hardware system for evolving image filters. Image filters are evolved based on
+the provided training data (video sequence) and no knowledge of conventional
+image filtering is required for setting up such a system. The hardware will
+evolve image filters autonomously (without human intervention). The
+documentation of ZyEHW will guide you how to achieve this but read our papers
+for more background information.
+
+1. If you want to know how to create your own *evolvable hardware system* then
+you can analyze and reuse our codes (see our licensing).
+
+1. If you are interested in *partial reconfiguration* at very low-level then
+you can learn how to do reconfiguration of look-up tables. This kind of
+reconfiguration is faster than the one supported by PlanAhead or Vivado.
+
+1. If you want to know how to use *Xilinx Vivado* for developing complex
+hardware systems then you can find our scripts for the automated use of this
+tool.
+
+Contact us if something is not clear and want a more detailed explanation (for
+example more comments somewhere in the code). If you find ZyEHW useful then it
+would be a nice way to support us by citations to our papers.
+
+## Installing and using ZyEHW
+
+We recommend to follow the instructions in `README.md` of each folders. The
+best way is visiting the folders and reading the instructions in the following
+order.
+
+1. Folder `hw` contains instructions and the source for generating the
+hardware configuration, i.e. the configuration bit stream for the programmable
+logic of Zynq-7000 AP SoC.
+
+1. The software for the processor cores of Zynq-7000 AP SoC are in folder
+`sw`.
+
+1. Software tools for preprocessing test inputs and postprocessing test
+outputs can be found in folder `tools`.
 
 ## Related publications
 
