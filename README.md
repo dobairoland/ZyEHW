@@ -12,8 +12,8 @@ Platform][ahs13], In: 2013 NASA/ESA Conference on Adaptive Hardware and
 Systems, 164-171, 2013.
 
 1. R. Dobai, L. Sekanina: [Towards Evolvable Systems Based on the Xilinx Zynq
-   Platform][ices13], In: 2013 IEEE International Conference on Evolvable
-   Systems (ICES), 89-95, 2013.
+Platform][ices13], In: 2013 IEEE International Conference on Evolvable Systems
+(ICES), 89-95, 2013.
 
 [ahs13]: http://dx.doi.org/10.1109/AHS.2013.6604241
 [ices13]: http://dx.doi.org/10.1109/ICES.2013.6613287
