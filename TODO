@@ -1,0 +1,23 @@
+Mention that tools are not optimized.
+
+Add references to papers.
+
+Add more comments.
+
+Add XML examples.
+
+Create and sign tag v1.0.
+
+Remove unnecessary inlines.
+
+Upgrade FatFs.
+
+Implement communication with the SD card.
+
+Add reference to TRETS paper.
+
+Add reference to the FPL paper (with mentioning tag v1.0).
+
+Add carry chain into the PEs.
+
+Implement PE evolution (maybe with ECGP).
