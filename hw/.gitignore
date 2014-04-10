@@ -1,0 +1,10 @@
+prj/
+.Xil/
+vivado*.jou
+vivado*.log
+vivado*.png
+vivado*.str
+vivado*.debug
+vivado*.zip
+*.log
+ps_clock_registers.log
