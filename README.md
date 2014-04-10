@@ -55,6 +55,20 @@ logic of Zynq-7000 AP SoC.
 1. Software tools for preprocessing test inputs and postprocessing test
 outputs can be found in folder `tools`.
 
+## System requirements
+
+1. Development board with Zynq-7000 AP SoC. ZyEHW was tested on a
+[zedboard](http://www.zedboard.org).
+
+1. [Xilinx](http://www.xilinx.com) Vivado Design Suite. We used version 2013.4
+while developing ZyEHW. Please read the product documentation for installing
+and setting up the software. A free Xilinx product license should be
+sufficient for this project.
+
+1. We recommend to use Linux. ZyEHW was tested in [Centos
+6.5](https://www.centos.org) running in
+[Virtualbox](https://www.virtualbox.org).
+
 ## Related publications
 
 1. R. Dobai, L. Sekanina: [Image Filter Evolution on the Xilinx Zynq
