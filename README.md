@@ -7,14 +7,14 @@ evolvable hardware (EHW).
 
 ZyEHW is the result of our ongoing research and intends to demonstrate our
 scientific results. Some of these results were already published (you can find
-a list related publications in this file). More papers will follow soon. ZyEHW
-does not contain the descriptions of our developed methods. Please read our
-papers if you want to find out more about our methods.
+a list of related publications in this file). More papers will follow soon.
+ZyEHW does not contain the descriptions of our developed methods. Please read
+our papers if you want to find out more about our methods.
 
 Currently, ZyEHW is able to evolve *image filters* only. Our intention is to
 include more case studies in the near future.
 
-# Who can benefit from ZyEHW?
+### Who can benefit from ZyEHW?
 
 1. If you are interested in *image filtering* then you can create a complete
 hardware system for evolving image filters. Image filters are evolved based on
@@ -29,7 +29,7 @@ you can analyze and reuse our codes (see our licensing).
 
 1. If you are interested in *partial reconfiguration* at very low-level then
 you can learn how to do reconfiguration of look-up tables. This kind of
-reconfiguration is faster than the one supported by PlanAhead or Vivado.
+reconfiguration is faster than the one supported by PlanAhead and Vivado.
 
 1. If you want to know how to use *Xilinx Vivado* for developing complex
 hardware systems then you can find our scripts for the automated use of this
