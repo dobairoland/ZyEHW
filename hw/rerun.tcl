@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along
 # with ZyEHW. If not, see <http://www.gnu.org/licenses/>.
 
-open_project prj/prj.xpr
+open_project -quiet prj/prj.xpr
 
 reset_run synth_1
 reset_run impl_1
