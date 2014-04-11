@@ -32,7 +32,7 @@
 #define AXI0_BASE       0x43C00000
 #define NUMBITSOF(a)    (CHAR_BIT*sizeof(a))
 
-#define VIDEO3
+#define VIDEO2
 
 #ifdef VIDEO1
 /* Bunny video (240p resolution) with 5% salt-and-pepper noise */

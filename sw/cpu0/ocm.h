@@ -24,7 +24,7 @@
 #include "xil_types.h"
 #include "cache.h"
 
-#define RUNS                            30
+#define RUNS                            1
 
 #define OCM_PTR                         (volatile u32 *)
 #define OCM_BASE_ADDRESS                XPAR_PS7_RAM_1_S_AXI_BASEADDR
