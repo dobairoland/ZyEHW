@@ -59,16 +59,20 @@ outputs can be found in folder `tools`.
 ## System requirements
 
 1. Development board with Zynq-7000 AP SoC. ZyEHW was tested on a
-[zedboard](http://www.zedboard.org).
+[Zedboard](http://www.zedboard.org). You will need to connect your board with
+your computer through a serial terminal program. Please read the Zedboard
+Getting Started Guide in order to learn how to do that.
 
-1. [Xilinx](http://www.xilinx.com) Vivado Design Suite. We used version 2013.4
-while developing ZyEHW. Please read the product documentation for installing
-and setting up the software. A free Xilinx product license should be
-sufficient for this project.
+1. The latest version of [Xilinx](http://www.xilinx.com) Vivado Design Suite.
+Please read the product documentation for installing and setting up the
+software. A free Xilinx product license should be sufficient for this project.
 
 1. We recommend to use Linux. ZyEHW was tested in [Centos
 6.5](https://www.centos.org) running in
 [Virtualbox](https://www.virtualbox.org).
+
+1. Our pre- and postprocessing `tools` require [ffmpeg]( http://ffmpeg.org/)
+for video processing.
 
 ## Related publications
 
