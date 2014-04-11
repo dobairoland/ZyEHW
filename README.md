@@ -16,7 +16,8 @@ include more case studies in the near future.
 
 ## Who can benefit from ZyEHW?
 
-1. If you are interested in *image filtering* then you can create a complete
+1. If you are interested in *image filtering* then you can create by ZyEHW a
+complete
 hardware system for evolving image filters. Image filters are evolved based on
 the provided training data (video sequence) and no knowledge of conventional
 image filtering is required for setting up such a system. The hardware will
@@ -41,7 +42,7 @@ would be a nice way to support us by citations to our papers.
 
 ## Installing and using ZyEHW
 
-We recommend to follow the instructions in `README.md` of each folders. The
+We recommend to follow the instructions in `README.md` file of each folder. The
 best way is visiting the folders and reading the instructions in the following
 order.
 
