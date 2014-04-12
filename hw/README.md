@@ -4,9 +4,9 @@ The hardware which will be implemented in the programmable logic of Zynq-7000
 AP SoC is described by the files located in the `hw/hdl` folder. The
 processors of Zynq-7000 AP SoC will communicate with the designed hardware
 through the AXI bus. Training data will be sent into the hardware. The
-training data is a sequence of video frames for the filter input and another
-sequence for the expected filter output. Candidate filters will be established
-by partial reconfiguration and writing into the configurations registers. The
+training data is a sequence of input video frames and a
+sequence of expected filter outputs. Candidate filters will be established
+by partial reconfiguration and writing into the configuration registers. The
 candidate filters can be evaluated in the programmable logic and their fitness
 computed and stored in registers. Please read our papers for more information.
 
@@ -21,7 +21,7 @@ cd hw
 
 The `create.tcl` file is provided for setting up the project. If you do not
 use a Zedboard then you need to change the development board in this file. The
-project will be placed in `hw/prj` folder after the following command was
+project will be placed in the `hw/prj` folder after the following command was
 invoked.
 ```sh
 vivado -mode tcl -source create.tcl
@@ -39,5 +39,5 @@ Please make sure that all timing constraints are met. You can do this by
 checking the logs, the timing reports or just making sure that *0 Critical
 Warnings* were encountered during the routing.
 
-You can close Vivado and proceed to the `sw` directory for setting up the
+You can close Vivado now and proceed to the `sw` directory for setting up the
 software for the processors of Zynq-7000 AP SoC.

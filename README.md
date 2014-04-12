@@ -1,7 +1,7 @@
 # ZyEHW
 
 ZyEHW is a joint hardware-software project for evolutionary design in the
-Xilinx Zynq-7000 all programmable (AP) system-on-chip (SoC) platform. The name
+Xilinx Zynq-7000 all programmable (AP) system-on-chip (SoC). The name
 ZyEHW is a concatenation of the first two letters of Zynq and the acronym for
 evolvable hardware (EHW).
 
@@ -42,11 +42,11 @@ would be a nice way to support us by citations to our papers.
 
 ## Installing and using ZyEHW
 
-We recommend to follow the instructions in `README.md` file of each folder. The
-best way is visiting the folders and reading the instructions in the following
-order.
+We recommend to follow the instructions in the `README.md` files (each folder
+has one). The best way to learn ZyEHW is visiting the folders and reading the
+instructions in the following order.
 
-1. Folder `hw` contains instructions and the source for generating the
+1. Folder `hw` contains instructions and the source code for generating the
 hardware configuration, i.e. the configuration bit stream for the programmable
 logic of Zynq-7000 AP SoC.
 
@@ -60,7 +60,7 @@ outputs can be found in folder `tools`.
 
 1. Development board with Zynq-7000 AP SoC. ZyEHW was tested on a
 [Zedboard](http://www.zedboard.org). You will need to connect your board with
-your computer through a serial terminal program. Please read the Zedboard
+your computer and setup a serial terminal program. Please read the Zedboard
 Getting Started Guide in order to learn how to do that.
 
 1. The latest version of [Xilinx](http://www.xilinx.com) Vivado Design Suite.

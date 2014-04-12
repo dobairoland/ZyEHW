@@ -3,10 +3,10 @@
 The `sw/cpu0` and `sw/cpu1` folders contain the code for the processors of
 Zynq-7000 AP SoC. The hardware project previously exported the necessary
 information for the Xilinx Software Development Kit (SDK). Open the SDK by
-running the following command (from the same terminal you run the hardware
-generation where the Xilinx settings file was sourced).
+running the following command (from the same terminal where the Xilinx
+setting file was sourced).
 ```sh
-xsdk -workspace hw/prj/prj.sdk/SDK/SDK_Export &
+xsdk -workspace ../hw/prj/prj.sdk/SDK/SDK_Export &
 ```
 
 Create a Hardware Platform Specification based on
@@ -17,25 +17,26 @@ make sure that `hw_platform_0`, `ps7_cortexa9_0` and `standalone` options
 are selected.
 
 Create another Xilinx Application Project. Set the name of the project to
-`cpu1` and select `ps7_cortexa9_1`. The other options should be same as for
+`cpu1` and select `ps7_cortexa9_1`. The other options should be the same as for
 `cpu0`.
 
-Copy or link the codes form `sw/cpu0` and `sw/cpu1` into the SDK projects.
+Link the codes form `sw/cpu0` and `sw/cpu1` into the SDK projects.
 This can be achieved by running the following commands.
 ```sh
-pushd hw/prj/prj.sdk/SDK/SDK_Export/cpu0
+pushd ../hw/prj/prj.sdk/SDK/SDK_Export/cpu0
 rm -r src
 ln -s ../../../../../../sw/cpu0 src
 popd
-pushd hw/prj/prj.sdk/SDK/SDK_Export/cpu1
+pushd ../hw/prj/prj.sdk/SDK/SDK_Export/cpu1
 rm -r src
 ln -s ../../../../../../sw/cpu1 src
 popd
 ```
 
 Usually the whole address space is occupied by one processor. We want to use
-both processors in parallel, therefore need to make some adjustments. And the
-stack and heap sizes should be increased.
+both processors in parallel, therefore we need to make some adjustments. And
+the
+stack and heap sizes should be increased also.
 
 Generate the linker script for `cpu0`. Use the default settings but modify the
 heap and stack size to `0x2000` and decrease the mapped address size of the
@@ -49,7 +50,8 @@ _HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x2000;
 ps7_ddr_0_S_AXI_BASEADDR : ORIGIN = 0x00100000, LENGTH = 0x0FF80000
 ```
 
-Generate the linker script for `cpu1` similarly. Modify the heap to 0x2000 and
+Generate the linker script for `cpu1` similarly. Modify the heap size to
+0x2000 and
 stack size to `0x8000000`. Decrease the mapped address size to `0x0FF80000`
 and set the base address to `0x10080000`. The relevant lines of the
 `hw/prj/prj.sdk/SDK/SDK_Export/cpu1/src/lscript.ld` file should look like
@@ -63,7 +65,8 @@ ps7_ddr_0_S_AXI_BASEADDR : ORIGIN = 0x10080000, LENGTH = 0x0FF80000
 
 ZyEHW needs some additional files for the communication with the SD card.
 Files `mmc.c` and `sd_hardware.h` need to be copied from the Zynq First Stage
-Boot Loader into `sw/cpu0` (because of license restrictions). We will
+Boot Loader into `sw/cpu0` (because of license restrictions we cannot
+distribute these files together with ZyEHW). We will
 implement our own SD card communication in the near future.
 
 Connect Zedboard to your computer and start the serial terminal program. A lot
@@ -118,5 +121,5 @@ video frame. Only some of the candidate solutions are transferred for longer
 videos (in order to reduce the transfer time). You will learn in
 `tools/README.md` how to process the content of `cgp_for_frames`. ZyEHW can
 perform multiple runs on the same video sequence and print the fitness values
-of the best candidate filters for each frame in each run. This can be used for
-statistical evaluation.
+of the best candidate filters (for each frame and in each run). This can be
+used for statistical evaluation.
