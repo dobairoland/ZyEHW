@@ -72,7 +72,9 @@ software. A free Xilinx product license should be sufficient for this project.
 [Virtualbox](https://www.virtualbox.org).
 
 1. Our pre- and postprocessing `tools` require [ffmpeg]( http://ffmpeg.org/)
-for video processing.
+for video processing. Other dependencies include [gcc](http://gcc.gnu.org),
+[make](https://www.gnu.org/software/make), [libxml2](http://xmlsoft.org) and
+[libtiff](http://www.remotesensing.org/libtiff).
 
 ## Related publications
 
