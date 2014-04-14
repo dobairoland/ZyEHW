@@ -74,11 +74,15 @@ instead of `-sp 5 -med` for edge detection).
 The `demonstration.y4m` video will show and compare the results of the best
 evolved filter for each video frame. You will see simultaneously four video
 sequences when playing this video:
+
 1. The video in northwestern corner will be the original video without any
 noise, i.e. `videoin`.
+
 1. The northeastern video will contain the noise if the `-sp` option was used.
+
 1. The southwestern video will show the processed video using a conventional
 method (median filter for `-med` option and Sobel edge detector for
 `-edge`).
+
 1. The filtered video using the evolved filters will be in the southeastern
 corner.
