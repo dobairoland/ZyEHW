@@ -52,9 +52,10 @@ it as `filter.xml`.
 ```
 
 Run the following command for checking the validity of the evolution (use the
-`-edge` option instead of `-med` when doing edge detection).
+`-edge` option instead of `-med` when doing edge detection). You need to
+specify also the video width `-x` and height `-y`.
 ```sh
-./check -i i.dat -f filter.xml -med
+./check -i i.dat -f filter.xml -x 176 -y 144 -med
 ```
 This will compare the hardware-generated results with the software-based
 simulations. You should receive the following response.
