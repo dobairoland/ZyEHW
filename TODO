@@ -1,5 +1,3 @@
-Upgrade FatFs.
-
 Implement communication with the SD card (modify this fact in the README).
 
 Add reference to TRETS paper.
