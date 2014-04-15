@@ -57,7 +57,7 @@ void interrupt_handler(void *data)
                 xil_printf("FIFO write error!\n\r");
 }
 
-static inline void init_interrupt()
+static void init_interrupt()
 {
         Xil_ExceptionInit();
 
@@ -83,7 +83,7 @@ static inline void init_interrupt()
         Xil_ExceptionEnable();
 }
 
-static inline void execute(int run)
+static void execute(int run)
 {
         XTime time;
         u32 frame, init_frame, frame_before_start, generations;

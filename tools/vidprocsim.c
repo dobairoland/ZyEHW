@@ -101,7 +101,7 @@ static inline void apply_output_operator(const frm_t *frmin, frm_t *frmout, int
         }
 }
 
-static inline void join_frames(frm_t *frmjoined, const frm_t *frm1, const
+static void join_frames(frm_t *frmjoined, const frm_t *frm1, const
                 frm_t *frm2, const frm_t *frm3, const frm_t *frm4)
 {
         int x, y, a, b, j;
@@ -127,7 +127,7 @@ static inline void join_frames(frm_t *frmjoined, const frm_t *frm1, const
         }
 }
 
-static inline void allocate_frames(int frmsize)
+static void allocate_frames(int frmsize)
 {
         if (!frmprepr || !frmdeterm || !frmevo) {
                 frmprepr = allocate_frm(frmsize);

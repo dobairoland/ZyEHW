@@ -81,7 +81,7 @@ static inline void order(u8 *a, u8 *b)
         }
 }
 
-static inline u8 median(u8 k0, u8 k1, u8 k2, u8 k3, u8 k4, u8 k5, u8 k6,
+static u8 median(u8 k0, u8 k1, u8 k2, u8 k3, u8 k4, u8 k5, u8 k6,
                 u8 k7, u8 k8)
 {
         /* Paeth's 9-input median sorting network */
@@ -128,7 +128,7 @@ static inline u8 edge_operator(u8 k0, u8 k1, u8 k2, u8 k3, u8 k4, u8 k5,
         return 128 + 1.0/8*absolute_val(p) + 1.0/8*absolute_val(q);
 }
 
-static inline void filter(const u8 *frmin, u8 *frmout)
+static void filter(const u8 *frmin, u8 *frmout)
 {
         register u32 i, x, y;
 
@@ -187,7 +187,7 @@ static inline void filter(const u8 *frmin, u8 *frmout)
         }
 }
 
-static inline void send_training_set()
+static void send_training_set()
 {
         register u32 i, j;
         static u8 frmin[FRAMESIZE];
@@ -240,7 +240,7 @@ static inline void setup_cache()
         Ddisable();
 }
 
-static inline void execute()
+static void execute()
 {
         int i;
 

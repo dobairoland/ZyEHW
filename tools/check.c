@@ -66,7 +66,7 @@ static inline void apply_output_operator(const frm_t *frmin, frm_t *frmout,
         }
 }
 
-static inline void clip_frame(const frm_t *frmin, frm_t *frmout, int origsize,
+static void clip_frame(const frm_t *frmin, frm_t *frmout, int origsize,
                 int origx, int origy, int newedge)
 {
         int i;
@@ -85,7 +85,7 @@ static inline void clip_frame(const frm_t *frmin, frm_t *frmout, int origsize,
         }
 }
 
-static inline int process(const char *input, const char *xml, int size,
+static int process(const char *input, const char *xml, int size,
                 int x, int y)
 {
         FILE *vfile;

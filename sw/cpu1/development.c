@@ -86,7 +86,7 @@ void update_last(const cgp_indiv_t *indiv, u32 frame, u32 generations)
         development_run[active_run].last->generations = generations;
 }
 
-static inline
+static
 void add_development(const cgp_indiv_t *indiv, u32 frame, u32 generations)
 {
         development_t *new_item = malloc(sizeof(development_t));
@@ -163,7 +163,7 @@ int remove_first_frames()
         return retval;
 }
 
-static inline
+static
 void print_development(int run)
 {
         development_t *p;

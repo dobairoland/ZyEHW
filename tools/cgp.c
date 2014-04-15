@@ -56,7 +56,7 @@ static inline int is_bit_set(uint8_t i, int bit)
         return (i & (1 << bit)) != 0;
 }
 
-static inline int cgp_get_lut_input(frm_t a, frm_t b, int bit)
+static int cgp_get_lut_input(frm_t a, frm_t b, int bit)
 {
         int result = 0;
         const int a_i = is_bit_set(a, bit);
@@ -106,7 +106,7 @@ static inline int cgp_get_lut_input(frm_t a, frm_t b, int bit)
         return result;
 }
 
-static inline frm_t cgp_evaluate_lut(const lut_t *msb, const lut_t *lsb,
+static frm_t cgp_evaluate_lut(const lut_t *msb, const lut_t *lsb,
                 frm_t a, frm_t b)
 {
         int i, select, bit, mask;
@@ -123,7 +123,7 @@ static inline frm_t cgp_evaluate_lut(const lut_t *msb, const lut_t *lsb,
         return result;
 }
 
-static inline frm_t cgp_get_response(const cgp_t *cgp, const frm_t *pis)
+static frm_t cgp_get_response(const cgp_t *cgp, const frm_t *pis)
 {
         int i, j;
         frm_t a, b, mux_a, mux_b;

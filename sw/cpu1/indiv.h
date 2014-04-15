@@ -61,7 +61,7 @@ extern void mutate_indiv(cgp_indiv_t *indiv);
 extern void function_to_bitstream(int col, int row, func_t f);
 extern void lut_from_bitstream(const cgp_indiv_t *indiv, int col, int row, int
                 bit, lut_t *msb, lut_t *lsb);
-extern inline XTime get_vrc_time();
-extern inline XTime get_dpr_time();
+extern XTime get_vrc_time();
+extern XTime get_dpr_time();
 
 #endif

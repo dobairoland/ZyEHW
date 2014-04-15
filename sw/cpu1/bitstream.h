@@ -49,7 +49,7 @@
 
 extern u32 lut_stream[];
 
-extern inline int size_of_lut_stream();
+extern int size_of_lut_stream();
 extern void set_left_far(int individual);
 extern void set_right_far(int individual);
 extern void flush_bitstream();

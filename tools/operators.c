@@ -44,7 +44,7 @@ static inline void order(frm_t *a, frm_t *b)
         }
 }
 
-static inline frm_t paeth_median(frm_t k0, frm_t k1, frm_t k2, frm_t k3, frm_t
+static frm_t paeth_median(frm_t k0, frm_t k1, frm_t k2, frm_t k3, frm_t
                 k4, frm_t k5, frm_t k6, frm_t k7, frm_t k8)
 {
         /* Paeth's 9-input median sorting network */

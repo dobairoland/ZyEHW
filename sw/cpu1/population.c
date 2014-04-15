@@ -39,7 +39,7 @@ XTime get_cgp_time()
         return cgp_time_acc;
 }
 
-static inline void evaluate_popul(u32 *based_on_frame)
+static void evaluate_popul(u32 *based_on_frame)
 {
         cgp_indiv_t *indiv;
         int i;

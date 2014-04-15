@@ -29,7 +29,7 @@
 #define CMD_SIZE                512
 #define PIXELBUF_SIZE           20
 
-static inline int get_video_resolution(const char *file, int *x, int *y)
+static int get_video_resolution(const char *file, int *x, int *y)
 {
         FILE *pipe;
         char cmd[CMD_SIZE];

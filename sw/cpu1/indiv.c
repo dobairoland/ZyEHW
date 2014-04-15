@@ -456,7 +456,7 @@ static u32 *right_lut_col[] = {
 static XTime vrc_time_acc = 0;
 static XTime dpr_time_acc = 0;
 
-static inline void update_bitstream(int col, int row, func_t f)
+static void update_bitstream(int col, int row, func_t f)
 {
         /* PE[0][0] DLUT CLUT             PE[7][3] DLUT CLUT
          *          BLUT ALUT                      BLUT ALUT
@@ -641,7 +641,7 @@ void mutate_indiv(cgp_indiv_t *indiv)
         }
 }
 
-static inline lut_t extract_quarter_lut(lut_t b0, lut_t b1, lut_t b2, lut_t b3,
+static lut_t extract_quarter_lut(lut_t b0, lut_t b1, lut_t b2, lut_t b3,
                 lut_t lut_mask, lut_t retval_bit)
 {
         int i;
@@ -674,7 +674,7 @@ static inline lut_t extract_quarter_lut(lut_t b0, lut_t b1, lut_t b2, lut_t b3,
         return retval;
 }
 
-static inline lut_t extract_half_lut(lut_t b0, lut_t b1, lut_t b2, lut_t b3,
+static lut_t extract_half_lut(lut_t b0, lut_t b1, lut_t b2, lut_t b3,
                 lut_t lut_mask)
 {
         const lut_t retval_bit1 = (1 << (LUT_T_BITS - 1));

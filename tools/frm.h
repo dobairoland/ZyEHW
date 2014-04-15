@@ -29,12 +29,12 @@ typedef uint8_t frm_t;
 #define FRMBITS         (sizeof(frm_t)*8)
 #define FRM_MAX         ((1<<FRMBITS)-1)
 
-extern inline frm_t *allocate_frm(int size);
-extern inline void deallocate_frm(frm_t *frm);
-extern inline void update_frm(frm_t *frm, int i, frm_t val);
-extern inline frm_t get_frm(const frm_t *frm, int i);
-extern inline void copy_frm(const frm_t *frm1, frm_t *frm2, int i);
-extern inline int read_frm(frm_t *frm, int frmsize, FILE *instream);
-extern inline int write_frm(int fd, const frm_t *frm, int frmsize);
+extern frm_t *allocate_frm(int size);
+extern void deallocate_frm(frm_t *frm);
+extern void update_frm(frm_t *frm, int i, frm_t val);
+extern frm_t get_frm(const frm_t *frm, int i);
+extern void copy_frm(const frm_t *frm1, frm_t *frm2, int i);
+extern int read_frm(frm_t *frm, int frmsize, FILE *instream);
+extern int write_frm(int fd, const frm_t *frm, int frmsize);
 
 #endif

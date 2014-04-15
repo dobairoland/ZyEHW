@@ -169,7 +169,7 @@ static int xmp_parse_pe_header(const xmlNodePtr node, int *col, int *row)
         return 1;
 }
 
-static inline void xml_parse_lut_val(const xmlDocPtr doc, const xmlNodePtr pnode,
+static void xml_parse_lut_val(const xmlDocPtr doc, const xmlNodePtr pnode,
                 lut_t *msb, lut_t *lsb)
 {
         xmlNodePtr node = pnode->xmlChildrenNode;
@@ -187,7 +187,7 @@ static inline void xml_parse_lut_val(const xmlDocPtr doc, const xmlNodePtr pnode
         }
 }
 
-static inline void xml_parse_lut(const xmlDocPtr doc, const xmlNodePtr node,
+static void xml_parse_lut(const xmlDocPtr doc, const xmlNodePtr node,
                 cgp_pe_t *pe)
 {
         int id;
@@ -206,7 +206,7 @@ static inline void xml_parse_lut(const xmlDocPtr doc, const xmlNodePtr node,
         xmlFree(attr);
 }
 
-static inline void xml_parse_pe(const xmlDocPtr doc, const xmlNodePtr pnode,
+static void xml_parse_pe(const xmlDocPtr doc, const xmlNodePtr pnode,
                 cgp_t *cgp)
 {
         cgp_pe_t *pe;
@@ -250,7 +250,7 @@ static inline int xml_parse_frame(const xmlDocPtr doc, const xmlNodePtr node)
         return xml_parse_node_hexval(doc, node);
 }
 
-static inline void find_next_frame()
+static void find_next_frame()
 {
         cgp_next_frame = CGP_LAST_FRAME;
 
