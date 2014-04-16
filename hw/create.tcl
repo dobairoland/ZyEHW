@@ -24,14 +24,30 @@ set prj_name prj
 set bd_path ${prj_name}/${prj_name}.srcs/sources_1/bd/${bd_name}
 set bd_file ${bd_path}/${bd_name}.bd
 set bd_wr_path ${bd_path}/hdl/${bd_name}_wrapper.vhd
+set ver [version -short]
 
 create_project ${prj_name} ${prj_name} -force -part xc7z020clg484-1
-set_property board em.avnet.com:zynq:zed:c [current_project]
 set_property target_language VHDL [current_project]
 
+if { [string match "2014.?" $ver] } {
+    set_property board em.avnet.com:zed:part0:0.9 [current_project]
+} else {
+    # the name was different before version 2014.1
+    set_property board em.avnet.com:zynq:zed:c [current_project]
+}
+
 create_bd_design ${bd_name}
-create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.3 \
-    processing_system7_0
+
+if { [string match "2014.?" $ver] } {
+    create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.4 \
+        processing_system7_0
+} elseif { [string match "2013.4" $ver] } {
+    create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.3 \
+        processing_system7_0
+} else {
+    puts "Version $ver is not supported";
+    exit;
+}
 
 # Design automation removes some settings (especially in 2013.4) therefore this
 # needs to be done in the beginning
