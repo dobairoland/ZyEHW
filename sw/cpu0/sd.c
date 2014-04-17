@@ -21,8 +21,7 @@
 #include "ff.h"
 #include "xil_printf.h"
 
-#define LOGIC_DRIVE ""
-#define MOUNT_IMMEDIATELY 1
+#define LOGIC_DRIVE 0
 
 static FIL file;
 static FATFS fs;
@@ -31,7 +30,7 @@ int open_sd_file(const char *name)
 {
         FRESULT res;
 
-        if ((res = f_mount(&fs, LOGIC_DRIVE, MOUNT_IMMEDIATELY)) != FR_OK) {
+        if ((res = f_mount(LOGIC_DRIVE, &fs)) != FR_OK) {
                 xil_printf("Cannot mount SD! (error: %d)\n\r", res);
                 return 0;
         }
@@ -60,5 +59,5 @@ u32 read_sd_file(u8 *dst, u32 len)
 void close_sd_file()
 {
         f_close(&file);
-        f_mount(NULL, LOGIC_DRIVE, MOUNT_IMMEDIATELY); /* NULL is unmount */
+        f_mount(LOGIC_DRIVE, NULL); /* NULL is unmount */
 }

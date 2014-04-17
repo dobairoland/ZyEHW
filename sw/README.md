@@ -14,7 +14,8 @@ Create a Hardware Platform Specification based on
 
 Create a new Xilinx Application Project. Set `cpu0` for the project name and
 make sure that `hw_platform_0`, `ps7_cortexa9_0` and `standalone` options
-are selected.
+are selected. Include `xilffs` library into the board support package
+`cpu0_bsp`.
 
 Create another Xilinx Application Project. Set the name of the project to
 `cpu1` and select `ps7_cortexa9_1`. The other options should be the same as for
@@ -62,12 +63,6 @@ _HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x8000000;
 ...
 ps7_ddr_0_S_AXI_BASEADDR : ORIGIN = 0x10080000, LENGTH = 0x0FF80000
 ```
-
-ZyEHW needs some additional files for the communication with the SD card.
-Files `mmc.c` and `sd_hardware.h` need to be copied from the Zynq First Stage
-Boot Loader into `sw/cpu0` (because of license restrictions we cannot
-distribute these files together with ZyEHW). We will
-implement our own SD card communication in the near future.
 
 Connect Zedboard to your computer and start the serial terminal program. A lot
 of data will be sent through the serial link so it might be a good idea to
