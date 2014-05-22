@@ -24,7 +24,6 @@
 
 #define CGP_COL                 8
 #define CGP_LAMBDA              6
-#define CGP_INDIVS              6
 
 typedef u32 fitness_t;
 

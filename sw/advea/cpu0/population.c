@@ -23,7 +23,7 @@
 #include "xparameters.h"
 #include "xil_printf.h"
 
-typedef cgp_indiv_t cgp_population_t[CGP_INDIVS];
+typedef cgp_indiv_t cgp_population_t[1 + CGP_LAMBDA];
 
 /* two populations - swapping just the index */
 static cgp_population_t population[2];
@@ -48,12 +48,12 @@ static void evaluate_popul(u32 *based_on_frame)
 {
         cgp_indiv_t *indiv;
         int i;
-        fitness_t fitness_arr[CGP_INDIVS];
+        fitness_t fitness_arr[CGP_LAMBDA];
         XTime start, end;
 
-        for (i = 0; i < CGP_INDIVS; ++i) {
+        for (i = 1; i < (1 + CGP_LAMBDA); ++i) {
                 indiv = &population[activepopulation][i];
-                indiv_to_fpga(indiv, i);
+                indiv_to_fpga(indiv, i - 1);
         }
 
         /* Evolution start */
@@ -64,15 +64,10 @@ static void evaluate_popul(u32 *based_on_frame)
         cgp_time_acc += end - start;
         /* Evolution end */
 
-        /* There is no possible way to know when the video frame changes.
-         * Therefore, the elit need to be re-evaluated every time. */
-        alpha = &population[activepopulation][0];
-        alpha->fitness = alphafitness = fitness_arr[0];
-
-        for (i = 1; i < CGP_INDIVS; ++i) {
+        for (i = 1; i < (1 + CGP_LAMBDA); ++i) {
                 indiv = &population[activepopulation][i];
 
-                indiv->fitness = fitness_arr[i];
+                indiv->fitness = fitness_arr[i - 1];
 
                 if (indiv->fitness <= alphafitness) {
                         alphafitness = indiv->fitness;
@@ -86,8 +81,12 @@ u32 init_popul()
         int i;
         u32 frame;
 
-        for (i = 0; i < CGP_INDIVS; ++i)
+        for (i = 1; i < (1 + CGP_LAMBDA); ++i)
                 init_indiv(&population[activepopulation][i]);
+
+        /* This is the worst possible fitness because this individual will not
+         * be evaluated. */
+        population[activepopulation][0].fitness = alphafitness;
 
         evaluate_popul(&frame);
 
@@ -106,7 +105,7 @@ u32 new_popul()
         alpha = &population[activepopulation][0];
         copy_indiv(prevalpha, alpha);
 
-        for (i = 1; i < CGP_INDIVS; ++i) {
+        for (i = 1; i < (1 + CGP_LAMBDA); ++i) {
                 indiv = &population[activepopulation][i];
 
                 copy_indiv(prevalpha, indiv);

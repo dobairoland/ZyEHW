@@ -77,7 +77,7 @@ static inline u32 get_out_reg(int indiv)
 static inline u32 get_fitness_reg(int indiv)
 {
         return AXI1_BASE + ((1 + /* 1 is the status register */
-                CGP_INDIVS * (CGP_COL + 1) + /* +1 is the output register */
+                CGP_LAMBDA * (CGP_COL + 1) + /* +1 is the output register */
                 indiv) << AXI_ADDR_INC_SHIFT);
 }
 
@@ -112,7 +112,7 @@ void wait_cgp(fitness_t *fitarr, u32 *frames)
 
         *frames = (stat_reg & STAT_FRAME_MASK) >> STAT_FRAME_SHIFT;
 
-        for (i = 0; i < CGP_INDIVS; ++i)
+        for (i = 0; i < CGP_LAMBDA; ++i)
                 fitarr[i] = Xil_In32(get_fitness_reg(i));
 }
 
