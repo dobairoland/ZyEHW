@@ -87,14 +87,6 @@ static void init_interrupt()
         Xil_ExceptionEnable();
 }
 
-static void store_elit(int run, int gen)
-{
-        const cgp_indiv_t *elit = get_elit();
-
-        fit_arr[run][gen] = elit->fitness;
-        copy_indiv(elit, elits + run);
-}
-
 static void execute(int run)
 {
         XTime time;
@@ -111,14 +103,16 @@ static void execute(int run)
         reset_cgp_time();
 
         (void) init_popul();
-        store_elit(run, 0);
+        fit_arr[run][0] = get_elit()->fitness;
 
         for (i = 1; i < GENERATIONS; ++i) {
                 (void) new_popul();
-                store_elit(run, i);
+                fit_arr[run][i] = get_elit()->fitness;
         }
 
         XTime_GetTime(&time);
+
+        copy_indiv(get_elit(), elits + run);
 
         xil_printf("Run %d is finished in 0x%X seconds (VRC: 0x%X, DPR: 0x%X, "
                         "CGP: 0x%X, seed: 0x%X).\n\r", run, get_sec_time(time),
