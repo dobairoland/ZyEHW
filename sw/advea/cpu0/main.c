@@ -24,6 +24,7 @@
 #include "xscugic.h"
 #include "population.h"
 #include "vrc.h"
+#include "train_data.h"
 
 #if 0
 #define PRINT_BITSTREAM
@@ -167,6 +168,8 @@ int main()
         init_interrupt();
 
         xil_printf("CPU begins...\n\r");
+
+        send_training_data();
 
         for (i = 0; i < RUNS; ++i)
                 execute(i);
