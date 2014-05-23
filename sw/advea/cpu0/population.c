@@ -81,6 +81,10 @@ u32 init_popul()
         int i;
         u32 frame;
 
+        alpha = NULL;
+        alphafitness = ~((fitness_t) 0);
+        activepopulation = 0;
+
         for (i = 1; i < (1 + CGP_LAMBDA); ++i)
                 init_indiv(&population[activepopulation][i]);
 
