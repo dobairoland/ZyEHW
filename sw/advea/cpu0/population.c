@@ -134,14 +134,12 @@ unsigned long get_sec_time(XTime time)
                         >> 1); /* XTime counts 2 cycles*/
 }
 
-void print_indiv_xml(const cgp_indiv_t *indiv, u32 generations, u32 frame)
+void print_indiv_xml(const cgp_indiv_t *indiv)
 {
         int i, j, k;
         lut_t msb = 0, lsb = 0;
 
-        xil_printf("<cgp>\n\r\t<fitness>0x%x</fitness>\n\r", indiv->fitness);
-        xil_printf("\t<generations>0x%x</generations>\n\r", generations);
-        xil_printf("\t<frame>0x%x</frame>\n\r", frame);
+        xil_printf("\t<fitness>0x%x</fitness>\n\r", indiv->fitness);
 
         for (i = 0; i < CGP_COL; ++i) {
                 for (j = 0; j < CGP_ROW; ++j) {
@@ -170,5 +168,4 @@ void print_indiv_xml(const cgp_indiv_t *indiv, u32 generations, u32 frame)
         xil_printf("\t<filter_switch>0x%x</filter_switch>\n\r",
                         indiv->filter_switch);
         xil_printf("\t<out_select>0x%x</out_select>\n\r", indiv->out_select);
-        xil_printf("</cgp>\n\r");
 }

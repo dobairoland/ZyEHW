@@ -26,8 +26,7 @@
 extern u32 init_popul();
 extern u32 new_popul();
 extern const cgp_indiv_t *get_elit();
-extern void print_indiv_xml(const cgp_indiv_t *indiv, u32 generations,
-                u32 frame);
+extern void print_indiv_xml(const cgp_indiv_t *indiv);
 extern unsigned long get_sec_time(XTime time);
 extern XTime get_cgp_time();
 extern void reset_cgp_time();

@@ -135,17 +135,17 @@ static void find_print_best()
                 }
         }
 
-        xil_printf("<?xml version=\"1.0\"?>\n\r<cgp_for_frames col=\"%d\" "
+        xil_printf("<?xml version=\"1.0\"?>\n\r<cgp col=\"%d\" "
                         "row=\"%d\" bit=\"%d\">\n\r",
                         CGP_COL, CGP_ROW, CGP_BIT);
 
-        print_indiv_xml(elits + best, GENERATIONS, 0);
+        print_indiv_xml(elits + best);
 
         xil_printf("<mutations>%d</mutations>\n\r", CGP_MUTATIONS);
         xil_printf("<lambda>%d</lambda>\n\r", CGP_LAMBDA);
         xil_printf("<generations>%d</generations>\n\r", GENERATIONS);
 
-        xil_printf("</cgp_for_frames>\n\r");
+        xil_printf("</cgp>\n\r");
 }
 
 static void print_fitnesses()
