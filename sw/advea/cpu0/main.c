@@ -31,8 +31,8 @@
 #include "bitstream.h"
 #endif
 
-#define RUNS            1
-#define GENERATIONS     30000
+#define RUNS            30
+#define GENERATIONS     50000
 
 #define PL_INT_ID       XPAR_FABRIC_SYSTEM_IRQ_F2P_INTR
 
