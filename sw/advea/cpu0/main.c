@@ -153,10 +153,15 @@ static void print_fitnesses()
         int i, j;
 
         for (i = 0; i < RUNS; ++i) {
+                fitness_t last_fit = 0;
+
                 xil_printf("\n\rFitness development during run %d:\n\r", i);
 
                 for (j = 0; j < GENERATIONS; ++j) {
-                        xil_printf("%d\n\r", fit_arr[i][j]);
+                        if (fit_arr[i][j] != last_fit) {
+                                last_fit = fit_arr[i][j];
+                                xil_printf("(%d, %d)\n\r", j, last_fit);
+                        }
                 }
         }
 }
