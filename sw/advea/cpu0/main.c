@@ -115,8 +115,8 @@ static void execute(int run)
 
         copy_indiv(get_elit(), elits + run);
 
-        xil_printf("Run %d is finished in 0x%X seconds (VRC: 0x%X, DPR: 0x%X, "
-                        "CGP: 0x%X, seed: 0x%X).\n\r", run, get_sec_time(time),
+        xil_printf("Run %d is finished in %d seconds (VRC: %d, DPR: %d, "
+                        "CGP: %d, seed: 0x%X).\n\r", run, get_sec_time(time),
                         get_sec_time(get_vrc_time()),
                         get_sec_time(get_dpr_time()),
                         get_sec_time(get_cgp_time()),
