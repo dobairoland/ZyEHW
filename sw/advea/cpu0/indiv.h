@@ -55,7 +55,6 @@ typedef struct {
 
 extern void init_indiv(cgp_indiv_t *indiv);
 extern void copy_indiv(const cgp_indiv_t *src, cgp_indiv_t *dst);
-extern int equal_indivs(const cgp_indiv_t *indiv1, const cgp_indiv_t *indiv2);
 extern void indiv_to_fpga(cgp_indiv_t *indiv, int index);
 extern void mutate_indiv(cgp_indiv_t *indiv);
 extern void function_to_bitstream(int col, int row, func_t f);

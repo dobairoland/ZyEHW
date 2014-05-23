@@ -609,16 +609,6 @@ void copy_indiv(const cgp_indiv_t *src, cgp_indiv_t *dst)
         memcpy(dst, src, sizeof(cgp_indiv_t));
 }
 
-int equal_indivs(const cgp_indiv_t *indiv1, const cgp_indiv_t *indiv2)
-{
-        /* The fitness is not included because the frame might change which
-         * will result in a different fitness value */
-        return (indiv1->filter_switch == indiv2->filter_switch) &&
-                (indiv1->out_select == indiv2->out_select) &&
-                (memcmp(indiv1->pe_arr, indiv2->pe_arr,
-                        sizeof(indiv1->pe_arr)) == 0);
-}
-
 void mutate_indiv(cgp_indiv_t *indiv)
 {
         const int randcol = rand() % (CGP_COL + 1);
