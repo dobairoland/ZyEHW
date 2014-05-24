@@ -31,6 +31,10 @@
 #include "bitstream.h"
 #endif
 
+#if 1
+#define STATIS_FITNESS
+#endif
+
 #define RUNS            30
 #define GENERATIONS     50000
 
@@ -41,6 +45,12 @@ static XScuGic_Config *icconf;
 
 static fitness_t fit_arr[RUNS][GENERATIONS];
 static cgp_indiv_t elits[RUNS];
+
+#ifdef STATIS_FITNESS
+static fitness_t median[GENERATIONS];
+static fitness_t low_quartile[GENERATIONS];
+static fitness_t up_quartile[GENERATIONS];
+#endif
 
 #ifdef PRINT_BITSTREAM
 void print_bitstream()
@@ -148,22 +158,85 @@ static void find_print_best()
         xil_printf("</cgp>\n\r");
 }
 
-static void print_fitnesses()
+static void print_fit_arr(const fitness_t *fit, int num)
 {
-        int i, j;
+        int i;
+        fitness_t last_fit = 0;
 
-        for (i = 0; i < RUNS; ++i) {
-                fitness_t last_fit = 0;
-
-                xil_printf("\n\rFitness development during run %d:\n\r", i);
-
-                for (j = 0; j < GENERATIONS; ++j) {
-                        if (fit_arr[i][j] != last_fit) {
-                                last_fit = fit_arr[i][j];
-                                xil_printf("(%d, %d)\n\r", j, last_fit);
-                        }
+        for (i = 0; i < num; ++i) {
+                if (fit[i] != last_fit) {
+                        last_fit = fit[i];
+                        xil_printf("(%d, %d)\n\r", i, last_fit);
                 }
         }
+}
+
+#ifdef STATIS_FITNESS
+static int qsortcomp(const void *p1, const void *p2)
+{
+        if ((*((const fitness_t *) p1)) < (*((const fitness_t *) p2)))
+                return -1;
+
+        if ((*((const fitness_t *) p1)) > (*((const fitness_t *) p2)))
+                return 1;
+
+        return 0;
+}
+
+static inline
+void find_median(const fitness_t *f, int begin, int end, fitness_t *med)
+{
+        const int s = begin + end;
+        const int i = s/2;
+
+        *med = (s % 2 == 0) ? f[i] : (f[i] + f[i+1])/2;
+}
+
+static void compute_statistics()
+{
+        int i, j;
+        fitness_t tmp_arr[RUNS];
+
+        for (i = 0; i < GENERATIONS; ++i) {
+                for (j = 0; j < RUNS; ++j) {
+                        tmp_arr[j] = fit_arr[j][i];
+                }
+
+                qsort(tmp_arr, RUNS, sizeof(tmp_arr[0]), qsortcomp);
+
+                find_median(tmp_arr, 0, RUNS-1, median + i);
+                find_median(tmp_arr, 0, RUNS/2-1, low_quartile + i);
+
+                if (RUNS % 2 == 0) {
+                        find_median(tmp_arr, RUNS/2, RUNS-1, up_quartile + i);
+                } else {
+                        find_median(tmp_arr, RUNS/2+1, RUNS-1, up_quartile + i);
+                }
+        }
+}
+#endif
+
+static void print_fitnesses()
+{
+#ifdef STATIS_FITNESS
+        compute_statistics();
+
+        xil_printf("\n\rMedian of %d runs:\n\r", RUNS);
+        print_fit_arr(median, GENERATIONS);
+
+        xil_printf("\n\rLower quartile of %d runs:\n\r", RUNS);
+        print_fit_arr(low_quartile, GENERATIONS);
+
+        xil_printf("\n\rUpper quartile of %d runs:\n\r", RUNS);
+        print_fit_arr(up_quartile, GENERATIONS);
+#else
+        int i;
+
+        for (i = 0; i < RUNS; ++i) {
+                xil_printf("\n\rFitness development during run %d:\n\r", i);
+                print_fit_arr(fit_arr[i], GENERATIONS);
+        }
+#endif
 }
 
 int main()
