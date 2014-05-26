@@ -20,6 +20,7 @@
 #ifndef DPR_H
 #define DPR_H
 
-extern void dpr_reconfigure();
+extern void dpr_reconfigure_indiv();
+extern void dpr_reconfigure_popul();
 
 #endif

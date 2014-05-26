@@ -456,7 +456,8 @@ static u32 *right_lut_col[] = {
 static XTime vrc_time_acc = 0;
 static XTime dpr_time_acc = 0;
 
-static void update_bitstream(int col, int row, func_t f)
+static void update_bitstream(int col, int row, func_t f0, func_t f1,
+                func_t f2, func_t f3)
 {
         /* PE[0][0] DLUT CLUT             PE[7][3] DLUT CLUT
          *          BLUT ALUT                      BLUT ALUT
@@ -511,25 +512,25 @@ static void update_bitstream(int col, int row, func_t f)
                 }
         }
 
-        b0[line0] = pregen_func[f][0][0];
-        b0[line1] = pregen_func[f][0][1];
-        b0[line2] = pregen_func[f][0][2];
-        b0[line3] = pregen_func[f][0][3];
+        b0[line0] = pregen_func[f0][0][0];
+        b0[line1] = pregen_func[f0][0][1];
+        b0[line2] = pregen_func[f0][0][2];
+        b0[line3] = pregen_func[f0][0][3];
 
-        b1[line0] = pregen_func[f][1][0];
-        b1[line1] = pregen_func[f][1][1];
-        b1[line2] = pregen_func[f][1][2];
-        b1[line3] = pregen_func[f][1][3];
+        b1[line0] = pregen_func[f1][1][0];
+        b1[line1] = pregen_func[f1][1][1];
+        b1[line2] = pregen_func[f1][1][2];
+        b1[line3] = pregen_func[f1][1][3];
 
-        b2[line0] = pregen_func[f][2][0];
-        b2[line1] = pregen_func[f][2][1];
-        b2[line2] = pregen_func[f][2][2];
-        b2[line3] = pregen_func[f][2][3];
+        b2[line0] = pregen_func[f2][2][0];
+        b2[line1] = pregen_func[f2][2][1];
+        b2[line2] = pregen_func[f2][2][2];
+        b2[line3] = pregen_func[f2][2][3];
 
-        b3[line0] = pregen_func[f][3][0];
-        b3[line1] = pregen_func[f][3][1];
-        b3[line2] = pregen_func[f][3][2];
-        b3[line3] = pregen_func[f][3][3];
+        b3[line0] = pregen_func[f3][3][0];
+        b3[line1] = pregen_func[f3][3][1];
+        b3[line2] = pregen_func[f3][3][2];
+        b3[line3] = pregen_func[f3][3][3];
 }
 
 static inline void mutate_connection(chrom_t *chrom)
@@ -556,7 +557,10 @@ void init_indiv(cgp_indiv_t *indiv)
                         pe_t *pe = &(indiv->pe_arr[i][j]);
                         mutate_connection(&(pe->mux_a));
                         mutate_connection(&(pe->mux_b));
-                        mutate_function(&(pe->f));
+                        mutate_function(&(pe->f_b0));
+                        pe->f_b1 = pe->f_b0;
+                        pe->f_b2 = pe->f_b0;
+                        pe->f_b3 = pe->f_b0;
                 }
         }
 
@@ -581,7 +585,8 @@ void indiv_to_fpga(cgp_indiv_t *indiv, int index)
                         const pe_t *pe = &indiv->pe_arr[i][j];
                         vrc_chrom = merge_vrc_mux(vrc_chrom, j, pe->mux_a,
                                         pe->mux_b);
-                        update_bitstream(i, j, pe->f);
+                        update_bitstream(i, j, pe->f_b0, pe->f_b1, pe->f_b2,
+                                        pe->f_b3);
                 }
 
                 send_vrc_column(index, i, vrc_chrom);
@@ -597,8 +602,8 @@ void indiv_to_fpga(cgp_indiv_t *indiv, int index)
         XTime_GetTime(&start);
         set_left_far(index);
         set_right_far(index);
-        flush_bitstream();
-        dpr_reconfigure();
+        flush_indiv_stream();
+        dpr_reconfigure_indiv();
         XTime_GetTime(&end);
         dpr_time_acc += end - start;
         /* DPR end */
@@ -626,8 +631,12 @@ void mutate_indiv(cgp_indiv_t *indiv)
                         mutate_connection(&(pe->mux_a));
                 } else if (randit == 1) {
                         mutate_connection(&(pe->mux_b));
-                } else
-                        mutate_function(&(pe->f));
+                } else {
+                        mutate_function(&(pe->f_b0));
+                        pe->f_b1 = pe->f_b0;
+                        pe->f_b2 = pe->f_b0;
+                        pe->f_b3 = pe->f_b0;
+                }
         }
 }
 
@@ -678,9 +687,10 @@ static lut_t extract_half_lut(lut_t b0, lut_t b1, lut_t b2, lut_t b3,
         return msb | lsb;
 }
 
-void function_to_bitstream(int col, int row, func_t f)
+void function_to_bitstream(int col, int row, func_t f0, func_t f1, func_t f2,
+                func_t f3)
 {
-        update_bitstream(col, row, f);
+        update_bitstream(col, row, f0, f1, f2, f3);
 }
 
 void lut_from_bitstream(const cgp_indiv_t *indiv, int col, int row, int bit,

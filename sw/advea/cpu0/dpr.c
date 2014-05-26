@@ -45,10 +45,8 @@ static inline void print_bitstream(const u32 *stream, int size)
 }
 #endif
 
-void dpr_reconfigure()
+static void init_reconfiguration()
 {
-        volatile u32 reg;
-
         if (!devc) {
                 devc = XDcfg_LookupConfig(XPAR_XDCFG_0_DEVICE_ID);
 
@@ -73,18 +71,11 @@ void dpr_reconfigure()
 #ifdef DPR_DEBUG
                 print("Starting the DMA transfer\n\r");
 #endif
+}
 
-        /* Download bitstream in non secure mode */
-        if (XDcfg_Transfer(&dev, lut_stream, size_of_lut_stream(),
-                                (void *) XDCFG_DMA_INVALID_ADDRESS, 0,
-                                XDCFG_NON_SECURE_PCAP_WRITE) != XST_SUCCESS) {
-                print("DMA transfer failed\n\r");
-                exit(-1);
-        }
-#ifdef DPR_DEBUG
-        else
-                print("DMA transfer OK\n\r");
-#endif
+static void complete_reconfiguration()
+{
+        volatile u32 reg;
 
         for (reg = 0; (reg & XDCFG_IXR_DMA_DONE_MASK) !=
                         XDCFG_IXR_DMA_DONE_MASK;
@@ -97,9 +88,40 @@ void dpr_reconfigure()
 #ifdef DPR_DEBUG
         print("DPR complete :-)\n\r");
 #endif
+}
 
-#ifdef DPR_BITSTREAM_OUT
-        print("Bitstream:\n\r");
-        print_bitstream(lut_stream, size_of_lut_stream());
+void dpr_reconfigure_indiv()
+{
+        init_reconfiguration();
+
+        /* Download bitstream in non secure mode */
+        if (XDcfg_Transfer(&dev, indiv_lut_stream, size_of_indiv_stream(),
+                                (void *) XDCFG_DMA_INVALID_ADDRESS, 0,
+                                XDCFG_NON_SECURE_PCAP_WRITE) != XST_SUCCESS) {
+                print("DMA transfer failed\n\r");
+                exit(-1);
+        }
+#ifdef DPR_DEBUG
+        else
+                print("DMA transfer OK\n\r");
 #endif
+        complete_reconfiguration();
+}
+
+void dpr_reconfigure_popul()
+{
+        init_reconfiguration();
+
+        /* Download bitstream in non secure mode */
+        if (XDcfg_Transfer(&dev, popul_mut_stream, size_of_popul_stream(),
+                                (void *) XDCFG_DMA_INVALID_ADDRESS, 0,
+                                XDCFG_NON_SECURE_PCAP_WRITE) != XST_SUCCESS) {
+                print("DMA transfer failed\n\r");
+                exit(-1);
+        }
+#ifdef DPR_DEBUG
+        else
+                print("DMA transfer OK\n\r");
+#endif
+        complete_reconfiguration();
 }

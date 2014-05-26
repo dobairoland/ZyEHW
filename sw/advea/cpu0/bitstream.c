@@ -136,8 +136,17 @@
 #define SLICE_X97Y100_X97Y149   0x00001E9A /*  top, row 0, col 61, minor 26 */
 #define SLICE_X107Y100_X107Y149 0x0000221A /*  top, row 0, col 68, minor 26 */
 
-#define FAR1_OFF                26
-#define FAR2_OFF                (HEADER_LINES + 5*BANK_SIZE + 4)
+#define MINOR_ADDR_MASK         0xFFFFFF80
+
+#define IND_FAR1_OFF            26
+#define IND_FAR2_OFF            (IND_HEADER_LINES + 5*BANK_SIZE + 4)
+
+#define POP_FAR1_OFF            30
+#define POP_FAR2_OFF            (IND0_OFF + BANK_SIZE + 4)
+#define POP_FAR3_OFF            (IND1_OFF + BANK_SIZE + 4)
+#define POP_FAR4_OFF            (IND2_OFF + BANK_SIZE + 4)
+#define POP_FAR5_OFF            (IND3_OFF + BANK_SIZE + 4)
+#define POP_FAR6_OFF            (IND4_OFF + BANK_SIZE + 4)
 
 static u32 left_fars[] = {
         SLICE_X1Y0_X1Y49,
@@ -157,7 +166,23 @@ static u32 right_fars[] = {
         SLICE_X107Y100_X107Y149
 };
 
-u32 lut_stream[] = {
+static u32 pop_fars[] = {
+        POP_FAR1_OFF,
+        POP_FAR2_OFF,
+        POP_FAR3_OFF,
+        POP_FAR4_OFF,
+        POP_FAR5_OFF,
+        POP_FAR6_OFF
+};
+
+static u8 minor_addr[] = {
+        26,
+        27,
+        28,
+        29
+};
+
+u32 indiv_lut_stream[] = {
         0xFFFFFFFF, /* Bus width auto detection */
         0xFFFFFFFF,
         0xFFFFFFFF,
@@ -330,22 +355,251 @@ u32 lut_stream[] = {
         0x20000000  /* Type 1 packet, NOP, Word count 0 */
 };
 
-int size_of_lut_stream()
+u32 popul_mut_stream[] = {
+        0xFFFFFFFF, /* Bus width auto detection */
+        0xFFFFFFFF,
+        0xFFFFFFFF,
+        0xFFFFFFFF,
+        0xFFFFFFFF,
+        0xFFFFFFFF,
+        0xFFFFFFFF,
+        0xFFFFFFFF, /* Bus width auto detection ends */
+        0x000000BB, /* Bus width pattern 1*/
+        0x11220044, /* Bus width pattern 2 */
+        0xFFFFFFFF, /* Bus width auto detection */
+        0xFFFFFFFF, /* Bus width auto detection */
+        0xAA995566, /* Sync word */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000007, /* Resets the CRC register. */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30018001, /* Type 1 packet, Write, Device ID Register */
+        0x03727093,
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000000, /* Null command.*/
+        0x3000C001, /* Type 1 packet, Write, Masking register */
+        0x00200000, /* CTL1 */
+        0x30030001, /* Type 1 packet, Write, Control Register 1 */
+        0x00200000, /* reserved according to the documentation */
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000001, /* Writes configuration data */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30002001, /* Type 1 packet, Write, Frame Address Register */
+        0x00000000, /* Frame address */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        EMPTY_BANK,
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000001, /* Writes configuration data */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30002001, /* Type 1 packet, Write, Frame Address Register */
+        0x00000000, /* Frame address */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        EMPTY_BANK,
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000001, /* Writes configuration data */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30002001, /* Type 1 packet, Write, Frame Address Register */
+        0x00000000, /* Frame address */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        EMPTY_BANK,
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000001, /* Writes configuration data */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30002001, /* Type 1 packet, Write, Frame Address Register */
+        0x00000000, /* Frame address */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        EMPTY_BANK,
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000001, /* Writes configuration data */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30002001, /* Type 1 packet, Write, Frame Address Register */
+        0x00000000, /* Frame address */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        EMPTY_BANK,
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000001, /* Writes configuration data */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30002001, /* Type 1 packet, Write, Frame Address Register */
+        0x00000000, /* Frame address */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        EMPTY_BANK,
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000000, /* Null command */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x3000C001, /* Type 1 packet, Write, Masking register */
+        0x00200000, /* CTL1 */
+        0x30030001, /* Type 1 packet, Write, Control Register 1 */
+        0x00000000, /* reserved according to the documentation */
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000003, /* Last frame: GHIGH_B, interconnects. */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x30002001, /* Type 1 packet, Write, Frame Address Register */
+        0x03BE0000, /* Dummy frame address */
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x00000007, /* Resets the CRC register. */
+        0x30008001, /* Type 1 packet, Write, Command Register */
+        0x0000000D, /* Resets the DALIGN signal */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000, /* Type 1 packet, NOP, Word count 0 */
+        0x20000000  /* Type 1 packet, NOP, Word count 0 */
+};
+
+int size_of_indiv_stream()
 {
-        return sizeof(lut_stream)/sizeof(lut_stream[0]);
+        return sizeof(indiv_lut_stream)/sizeof(indiv_lut_stream[0]);
 }
 
 void set_left_far(int individual)
 {
-         lut_stream[FAR1_OFF] = left_fars[individual];
+         indiv_lut_stream[IND_FAR1_OFF] = left_fars[individual];
 }
 
 void set_right_far(int individual)
 {
-        lut_stream[FAR2_OFF] = right_fars[individual];
+        indiv_lut_stream[IND_FAR2_OFF] = right_fars[individual];
 }
 
-void flush_bitstream()
+void flush_indiv_stream()
 {
-        Xil_DCacheFlushRange((u32) lut_stream, sizeof(lut_stream));
+        Xil_DCacheFlushRange((u32) indiv_lut_stream, sizeof(indiv_lut_stream));
+}
+
+int size_of_popul_stream()
+{
+        return sizeof(popul_mut_stream)/sizeof(popul_mut_stream[0]);
+}
+
+void flush_popul_stream()
+{
+        Xil_DCacheFlushRange((u32) popul_mut_stream, sizeof(popul_mut_stream));
+}
+
+void set_pop_far(int individual, int lut, int right)
+{
+        u32 frame_address = right ? right_fars[individual] :
+                left_fars[individual];
+
+        frame_address = (frame_address & MINOR_ADDR_MASK) | minor_addr[lut];
+
+        popul_mut_stream[pop_fars[individual]] = frame_address;
 }

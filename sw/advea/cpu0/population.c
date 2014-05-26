@@ -146,12 +146,17 @@ void print_indiv_xml(const cgp_indiv_t *indiv)
                         const pe_t *pe = &indiv->pe_arr[i][j];
 
                         xil_printf("\t<pe col=\"%d\" row=\"%d\">\n\r"
-                                        "\t<f>0x%x</f>\n\r"
+                                        "\t<f0>0x%x</f0>\n\r"
+                                        "\t<f1>0x%x</f1>\n\r"
+                                        "\t<f2>0x%x</f2>\n\r"
+                                        "\t<f3>0x%x</f3>\n\r"
                                         "\t<a>0x%x</a>\n\r"
                                         "\t<b>0x%x</b>\n\n\r",
-                                        i, j, pe->f, pe->mux_a, pe->mux_b);
+                                        i, j, pe->f_b0, pe->f_b1, pe->f_b2,
+                                        pe->f_b3, pe->mux_a, pe->mux_b);
 
-                        function_to_bitstream(i, j, pe->f);
+                        function_to_bitstream(i, j, pe->f_b0, pe->f_b1,
+                                        pe->f_b2, pe->f_b3);
 
                         for (k = 0; k < CGP_BIT; ++k) {
                                 lut_from_bitstream(indiv, i, j, k, &msb, &lsb);
