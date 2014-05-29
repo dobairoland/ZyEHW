@@ -23,7 +23,10 @@
 #include "indiv.h"
 #include "xtime_l.h"
 
+#define RECONFIG_GENERATIONS    1
+
 extern u32 init_popul();
+extern void init_popul_with_elit();
 extern u32 new_popul();
 extern const cgp_indiv_t *get_elit();
 extern void print_indiv_xml(const cgp_indiv_t *indiv);

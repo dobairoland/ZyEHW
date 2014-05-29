@@ -25,12 +25,19 @@
 
 typedef cgp_indiv_t cgp_population_t[1 + CGP_LAMBDA];
 
+static mut_t indiv_mut_arr[CGP_LAMBDA];
+static mut_t indiv_mut_col_arr[CGP_LAMBDA];
+
 /* two populations - swapping just the index */
 static cgp_population_t population[2];
 static unsigned short activepopulation = 0; /* swap index */
 
 static cgp_indiv_t *alpha = NULL;
 static fitness_t alphafitness = ~((fitness_t) 0);
+
+#ifdef ADVEA
+static int unchanged_generations = 0;
+#endif
 
 static XTime cgp_time_acc = 0;
 
@@ -42,6 +49,16 @@ void reset_cgp_time()
 XTime get_cgp_time()
 {
         return cgp_time_acc;
+}
+
+static inline void init_mut_array()
+{
+        int i;
+
+        for (i = 0; i < CGP_LAMBDA; ++i) {
+                indiv_mut_arr[i] = NOT_MUTATED;
+                indiv_mut_col_arr[i] = 0;
+        }
 }
 
 static void evaluate_popul(u32 *based_on_frame)
@@ -76,6 +93,65 @@ static void evaluate_popul(u32 *based_on_frame)
         }
 }
 
+#ifdef ADVEA
+static void evaluate_popul_finer_reconfig(u32 *based_on_frame)
+{
+        cgp_indiv_t *indiv;
+        int i;
+        fitness_t fitness_arr[CGP_LAMBDA];
+        XTime start, end;
+
+        for (i = 1; i < (1 + CGP_LAMBDA); ++i) {
+                indiv = &population[activepopulation][i];
+                indiv_to_bitstream(indiv, i - 1);
+        }
+
+        reconfig_population();
+
+        /* Evolution start */
+        XTime_GetTime(&start);
+        start_cgp();
+        wait_cgp(fitness_arr, based_on_frame);
+        XTime_GetTime(&end);
+        cgp_time_acc += end - start;
+        /* Evolution end */
+
+        for (i = 1; i < (1 + CGP_LAMBDA); ++i) {
+                indiv = &population[activepopulation][i];
+
+                indiv->fitness = fitness_arr[i - 1];
+
+                if (indiv->fitness <= alphafitness) {
+                        alphafitness = indiv->fitness;
+                        alpha = indiv;
+                }
+        }
+
+        if ((++unchanged_generations) >= RECONFIG_GENERATIONS) {
+                unchanged_generations = 0;
+
+                /* inverse reconfiguration is needed */
+                for (i = 1; i < (1 + CGP_LAMBDA); ++i) {
+                        /* the previous elit is established in the
+                         * programmable logic (at each position) */
+
+                        indiv = &population[activepopulation][i];
+
+                        /* the reconfiguration will be done only where changes
+                         * have been made */
+                        alpha->mut_bank = indiv->mut_bank;
+                        alpha->mut_col = indiv->mut_col;
+                        indiv_to_bitstream(alpha, i - 1);
+                }
+
+                reconfig_population();
+
+                alpha->mut_bank = NOT_MUTATED;
+                init_mut_array();
+        }
+}
+#endif
+
 u32 init_popul()
 {
         int i;
@@ -84,6 +160,11 @@ u32 init_popul()
         alpha = NULL;
         alphafitness = ~((fitness_t) 0);
         activepopulation = 0;
+
+#ifdef ADVEA
+        unchanged_generations = 0;
+        init_mut_array();
+#endif
 
         for (i = 1; i < (1 + CGP_LAMBDA); ++i)
                 init_indiv(&population[activepopulation][i]);
@@ -97,29 +178,53 @@ u32 init_popul()
         return frame;
 }
 
+void init_popul_with_elit()
+{
+        int i;
+
+        /* the elit is copied everywhere */
+        for (i = 1; i < (1 + CGP_LAMBDA); ++i) {
+                indiv_to_fpga(alpha, i - 1);
+        }
+}
+
 u32 new_popul()
 {
-        int i, j;
+        int i, j, k;
         cgp_indiv_t *prevalpha = alpha;
         cgp_indiv_t *indiv;
-        u32 frame;
+        u32 frame = 0;
 
         activepopulation ^= 1;
 
         alpha = &population[activepopulation][0];
         copy_indiv(prevalpha, alpha);
 
-        for (i = 1; i < (1 + CGP_LAMBDA); ++i) {
+        for (i = 1, k = 0; i < (1 + CGP_LAMBDA); k = i++) {
                 indiv = &population[activepopulation][i];
 
                 copy_indiv(prevalpha, indiv);
+#ifdef ADVEA
+                indiv->mut_col = indiv_mut_col_arr[k];
+                indiv->mut_bank = indiv_mut_arr[k];
+#else
+                (void) k; /* removes unused warning */
+#endif
 
                 for (j = 0; j < CGP_MUTATIONS; ++j)
                         mutate_indiv(indiv);
+
+#ifdef ADVEA
+                indiv_mut_col_arr[k] = indiv->mut_col;
+                indiv_mut_arr[k] = indiv->mut_bank;
+#endif
         }
 
+#ifdef ADVEA
+        evaluate_popul_finer_reconfig(&frame);
+#else
         evaluate_popul(&frame);
-
+#endif
         return frame;
 }
 

@@ -116,6 +116,10 @@ static void execute(int run)
         (void) init_popul();
         fit_arr[run][0] = get_elit()->fitness;
 
+#ifdef ADVEA
+        init_popul_with_elit();
+#endif
+
         for (i = 1; i < GENERATIONS; ++i) {
                 (void) new_popul();
                 fit_arr[run][i] = get_elit()->fitness;
@@ -154,6 +158,8 @@ static void find_print_best()
         xil_printf("<mutations>%d</mutations>\n\r", CGP_MUTATIONS);
         xil_printf("<lambda>%d</lambda>\n\r", CGP_LAMBDA);
         xil_printf("<generations>%d</generations>\n\r", GENERATIONS);
+        xil_printf("<reconfig_generations>%d</reconfig_generations>\n\r",
+                        RECONFIG_GENERATIONS);
 
         xil_printf("</cgp>\n\r");
 }

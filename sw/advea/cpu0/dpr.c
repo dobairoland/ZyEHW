@@ -40,8 +40,12 @@ static inline void print_bitstream(const u32 *stream, int size)
 {
         int i;
 
+        xil_printf("\n\r");
+
         for (i = 0; i < size; ++i)
                 xil_printf("0x%X\n\r", stream[i]);
+
+        xil_printf("\n\r");
 }
 #endif
 
@@ -110,6 +114,10 @@ void dpr_reconfigure_indiv()
 
 void dpr_reconfigure_popul()
 {
+#ifdef DPR_BITSTREAM_OUT
+        print_bitstream(popul_mut_stream, size_of_popul_stream());
+#endif
+
         init_reconfiguration();
 
         /* Download bitstream in non secure mode */

@@ -23,9 +23,14 @@
 #include <string.h>
 #include "dpr.h"
 #include "bitstream.h"
+#include "xil_printf.h"
 
 #if (CGP_ROW == 4)
 #define CGP_ROW_MASK    0x3
+#endif
+
+#if (BANKS == 4)
+#define BANKS_MASK      0x3
 #endif
 
 #if 0
@@ -453,11 +458,20 @@ static u32 *right_lut_col[] = {
         RIGHT_BANK3,
 };
 
+static u32 *ind_banks[] = {
+        IND0_BANK,
+        IND1_BANK,
+        IND2_BANK,
+        IND3_BANK,
+        IND4_BANK,
+        IND5_BANK
+};
+
 static XTime vrc_time_acc = 0;
 static XTime dpr_time_acc = 0;
 
-static void update_bitstream(int col, int row, func_t f0, func_t f1,
-                func_t f2, func_t f3)
+static void compute_line_offsets(int col, int row, int right, int *line0,
+                int *line1, int *line2, int *line3)
 {
         /* PE[0][0] DLUT CLUT             PE[7][3] DLUT CLUT
          *          BLUT ALUT                      BLUT ALUT
@@ -475,42 +489,52 @@ static void update_bitstream(int col, int row, func_t f0, func_t f1,
          *          BLUT ALUT                      BLUT ALUT
          */
 
+        int offset = BANK_SIZE-WORD_PER_FUNCTION-1-
+                ((right ? (CGP_COL-1-col)*CGP_ROW+(CGP_ROW-1-row) :
+                        (col*CGP_ROW+row)) << WORD_PER_FUNCTION_SHIFT);
+        *line0 = offset;
+        *line1 = ++offset;
+        *line2 = ++offset;
+        *line3 = ++offset;
+
+        if (*line3 >= HAMMING_OFF) {
+                if (*line0 < HAMMING_OFF) {
+                        /* only some of them are after the Hamming line */
+                        if (*line1 >= HAMMING_OFF) {
+                                *line1 = *line2;
+                                *line2 = *line3;
+                                ++(*line3);
+                        } else if (*line2 >= HAMMING_OFF) {
+                                *line2 = *line3;
+                                ++(*line3);
+                        } else {
+                                /* only *line3 >= HAMMING_OFF */
+                                ++(*line3);
+                        }
+                } else {
+                        /* they all are after the Hamming line */
+                        *line0 = *line1;
+                        *line1 = *line2;
+                        *line2 = *line3;
+                        ++(*line3);
+                }
+        }
+}
+
+static void update_bitstream(int col, int row, func_t f0, func_t f1,
+                func_t f2, func_t f3)
+{
+
         const int right = (col >= (CGP_COL/CGP_LUT_COL));
         u32 **lut_col = right ? right_lut_col : left_lut_col;
         u32 *b0 = lut_col[0];
         u32 *b1 = lut_col[1];
         u32 *b2 = lut_col[2];
         u32 *b3 = lut_col[3];
-        int offset = BANK_SIZE-WORD_PER_FUNCTION-1-
-                ((right ? (CGP_COL-1-col)*CGP_ROW+(CGP_ROW-1-row) :
-                        (col*CGP_ROW+row)) << WORD_PER_FUNCTION_SHIFT);
-        int line0 = offset;
-        int line1 = ++offset;
-        int line2 = ++offset;
-        int line3 = ++offset;
 
-        if (line3 >= HAMMING_OFF) {
-                if (line0 < HAMMING_OFF) {
-                        /* only some of them are after the Hamming line */
-                        if (line1 >= HAMMING_OFF) {
-                                line1 = line2;
-                                line2 = line3;
-                                ++line3;
-                        } else if (line2 >= HAMMING_OFF) {
-                                line2 = line3;
-                                ++line3;
-                        } else {
-                                /* only line3 >= HAMMING_OFF */
-                                ++line3;
-                        }
-                } else {
-                        /* they all are after the Hamming line */
-                        line0 = line1;
-                        line1 = line2;
-                        line2 = line3;
-                        ++line3;
-                }
-        }
+        int line0, line1, line2, line3;
+
+        compute_line_offsets(col, row, right, &line0, &line1, &line2, &line3);
 
         b0[line0] = pregen_func[f0][0][0];
         b0[line1] = pregen_func[f0][0][1];
@@ -531,6 +555,25 @@ static void update_bitstream(int col, int row, func_t f0, func_t f1,
         b3[line1] = pregen_func[f3][3][1];
         b3[line2] = pregen_func[f3][3][2];
         b3[line3] = pregen_func[f3][3][3];
+}
+
+static void update_bitstream_one_bank(int index, int col, int row, int right,
+                int bank, func_t f)
+{
+        const int real_right = (col >= (CGP_COL/CGP_LUT_COL));
+
+        if (real_right == right) {
+                int line0, line1, line2, line3;
+                u32 *current_bank = ind_banks[index];
+
+                compute_line_offsets(col, row, right, &line0, &line1, &line2,
+                                &line3);
+
+                current_bank[line0] = pregen_func[f][bank][0];
+                current_bank[line1] = pregen_func[f][bank][1];
+                current_bank[line2] = pregen_func[f][bank][2];
+                current_bank[line3] = pregen_func[f][bank][3];
+        }
 }
 
 static inline void mutate_connection(chrom_t *chrom)
@@ -567,9 +610,10 @@ void init_indiv(cgp_indiv_t *indiv)
         mutate_connection_out(&(indiv->filter_switch));
         mutate_connection_out(&(indiv->out_select));
         indiv->fitness = ~((fitness_t) 0);
+        indiv->mut_bank = NOT_MUTATED;
 }
 
-void indiv_to_fpga(cgp_indiv_t *indiv, int index)
+static void indiv_to_fpga_vrc(cgp_indiv_t *indiv, int index)
 {
         int i, j;
         u32 vrc_chrom;
@@ -585,8 +629,6 @@ void indiv_to_fpga(cgp_indiv_t *indiv, int index)
                         const pe_t *pe = &indiv->pe_arr[i][j];
                         vrc_chrom = merge_vrc_mux(vrc_chrom, j, pe->mux_a,
                                         pe->mux_b);
-                        update_bitstream(i, j, pe->f_b0, pe->f_b1, pe->f_b2,
-                                        pe->f_b3);
                 }
 
                 send_vrc_column(index, i, vrc_chrom);
@@ -597,6 +639,22 @@ void indiv_to_fpga(cgp_indiv_t *indiv, int index)
         XTime_GetTime(&end);
         vrc_time_acc += end - start;
         /* VRC end */
+}
+
+void indiv_to_fpga(cgp_indiv_t *indiv, int index)
+{
+        int i, j;
+        XTime start, end;
+
+        for (i = 0; i < CGP_COL; ++i) {
+                for (j = 0; j < CGP_ROW; ++j) {
+                        const pe_t *pe = &indiv->pe_arr[i][j];
+                        update_bitstream(i, j, pe->f_b0, pe->f_b1, pe->f_b2,
+                                        pe->f_b3);
+                }
+        }
+
+        indiv_to_fpga_vrc(indiv, index);
 
         /* DPR start */
         XTime_GetTime(&start);
@@ -604,6 +662,55 @@ void indiv_to_fpga(cgp_indiv_t *indiv, int index)
         set_right_far(index);
         flush_indiv_stream();
         dpr_reconfigure_indiv();
+        XTime_GetTime(&end);
+        dpr_time_acc += end - start;
+        /* DPR end */
+}
+
+void indiv_to_bitstream(cgp_indiv_t *indiv, int index)
+{
+        int i, j;
+        const mut_t orig_bank = indiv->mut_bank;
+
+        if (indiv->mut_bank == NOT_MUTATED) {
+                /* Even there were no mutation we need to reconfigure
+                 * something (because the bitstream is static). */
+                indiv->mut_bank = 0;
+                indiv->mut_col = 0;
+        }
+
+
+        for (i = 0; i < CGP_COL; ++i) {
+                for (j = 0; j < CGP_ROW; ++j) {
+                        const pe_t *pe = &indiv->pe_arr[i][j];
+                        const func_t f_arr[] = {
+                                pe->f_b0,
+                                pe->f_b1,
+                                pe->f_b2,
+                                pe->f_b3
+                        };
+
+                        update_bitstream_one_bank(index, i, j, indiv->mut_col,
+                                        indiv->mut_bank,
+                                        f_arr[indiv->mut_bank]);
+                }
+        }
+
+        set_pop_far(index, indiv->mut_bank, indiv->mut_col);
+
+        indiv_to_fpga_vrc(indiv, index);
+
+        indiv->mut_bank = orig_bank;
+}
+
+void reconfig_population()
+{
+        XTime start, end;
+
+        /* DPR start */
+        XTime_GetTime(&start);
+        flush_popul_stream();
+        dpr_reconfigure_popul();
         XTime_GetTime(&end);
         dpr_time_acc += end - start;
         /* DPR end */
@@ -632,10 +739,50 @@ void mutate_indiv(cgp_indiv_t *indiv)
                 } else if (randit == 1) {
                         mutate_connection(&(pe->mux_b));
                 } else {
+#ifdef ADVEA
+                        if (indiv->mut_bank == NOT_MUTATED) {
+                                indiv->mut_bank = rand() & BANKS_MASK;
+                                indiv->mut_col = (randcol >=
+                                                (CGP_COL/CGP_LUT_COL));
+                        } else {
+                                /* if we try to mutate in the column different
+                                 * from the allowed one then we just switch to
+                                 * the PE in the other column */
+
+                                if (indiv->mut_col && randcol < CGP_COL/2) {
+                                        pe = &(indiv->pe_arr[randcol+CGP_COL/2]
+                                                        [randrow]);
+                                } else if (!indiv->mut_col && randcol >=
+                                                CGP_COL/2) {
+                                        pe = &(indiv->pe_arr[randcol-CGP_COL/2]
+                                                        [randrow]);
+                                }
+                        }
+
+                        switch (indiv->mut_bank) {
+                                case 0:
+                                        mutate_function(&(pe->f_b0));
+                                        break;
+                                case 1:
+                                        mutate_function(&(pe->f_b1));
+                                        break;
+                                case 2:
+                                        mutate_function(&(pe->f_b2));
+                                        break;
+                                case 3:
+                                        mutate_function(&(pe->f_b3));
+                                        break;
+                                default:
+                                        xil_printf("Error: Number of banks is "
+                                                        "not 4!\n\r");
+                                        break;
+                        }
+#else
                         mutate_function(&(pe->f_b0));
                         pe->f_b1 = pe->f_b0;
                         pe->f_b2 = pe->f_b0;
                         pe->f_b3 = pe->f_b0;
+#endif
                 }
         }
 }

@@ -141,12 +141,12 @@
 #define IND_FAR1_OFF            26
 #define IND_FAR2_OFF            (IND_HEADER_LINES + 5*BANK_SIZE + 4)
 
-#define POP_FAR1_OFF            30
-#define POP_FAR2_OFF            (IND0_OFF + BANK_SIZE + 4)
-#define POP_FAR3_OFF            (IND1_OFF + BANK_SIZE + 4)
-#define POP_FAR4_OFF            (IND2_OFF + BANK_SIZE + 4)
-#define POP_FAR5_OFF            (IND3_OFF + BANK_SIZE + 4)
-#define POP_FAR6_OFF            (IND4_OFF + BANK_SIZE + 4)
+#define POP_FAR1_OFF            26
+#define POP_FAR2_OFF            (IND0_OFF + 2*BANK_SIZE + 4)
+#define POP_FAR3_OFF            (IND1_OFF + 2*BANK_SIZE + 4)
+#define POP_FAR4_OFF            (IND2_OFF + 2*BANK_SIZE + 4)
+#define POP_FAR5_OFF            (IND3_OFF + 2*BANK_SIZE + 4)
+#define POP_FAR6_OFF            (IND4_OFF + 2*BANK_SIZE + 4)
 
 static u32 left_fars[] = {
         SLICE_X1Y0_X1Y49,
@@ -378,66 +378,64 @@ u32 popul_mut_stream[] = {
         0x03727093,
         0x30008001, /* Type 1 packet, Write, Command Register */
         0x00000000, /* Null command.*/
-        0x3000C001, /* Type 1 packet, Write, Masking register */
-        0x00200000, /* CTL1 */
-        0x30030001, /* Type 1 packet, Write, Control Register 1 */
-        0x00200000, /* reserved according to the documentation */
         0x30008001, /* Type 1 packet, Write, Command Register */
         0x00000001, /* Writes configuration data */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
         0x30002001, /* Type 1 packet, Write, Frame Address Register */
         0x00000000, /* Frame address */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
-        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        0x300040CA, /* Type 1 packet, Write, Frame Data Input Register */
         EMPTY_BANK,
+        EMPTY_BANK, /* An empty, not used should be at the end */
         0x30008001, /* Type 1 packet, Write, Command Register */
         0x00000001, /* Writes configuration data */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
         0x30002001, /* Type 1 packet, Write, Frame Address Register */
         0x00000000, /* Frame address */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
-        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        0x300040CA, /* Type 1 packet, Write, Frame Data Input Register */
         EMPTY_BANK,
+        EMPTY_BANK, /* An empty, not used should be at the end */
         0x30008001, /* Type 1 packet, Write, Command Register */
         0x00000001, /* Writes configuration data */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
         0x30002001, /* Type 1 packet, Write, Frame Address Register */
         0x00000000, /* Frame address */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
-        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        0x300040CA, /* Type 1 packet, Write, Frame Data Input Register */
         EMPTY_BANK,
+        EMPTY_BANK, /* An empty, not used should be at the end */
         0x30008001, /* Type 1 packet, Write, Command Register */
         0x00000001, /* Writes configuration data */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
         0x30002001, /* Type 1 packet, Write, Frame Address Register */
         0x00000000, /* Frame address */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
-        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        0x300040CA, /* Type 1 packet, Write, Frame Data Input Register */
         EMPTY_BANK,
+        EMPTY_BANK, /* An empty, not used should be at the end */
         0x30008001, /* Type 1 packet, Write, Command Register */
         0x00000001, /* Writes configuration data */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
         0x30002001, /* Type 1 packet, Write, Frame Address Register */
         0x00000000, /* Frame address */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
-        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        0x300040CA, /* Type 1 packet, Write, Frame Data Input Register */
         EMPTY_BANK,
+        EMPTY_BANK, /* An empty, not used should be at the end */
         0x30008001, /* Type 1 packet, Write, Command Register */
         0x00000001, /* Writes configuration data */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
         0x30002001, /* Type 1 packet, Write, Frame Address Register */
         0x00000000, /* Frame address */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
-        0x30004065, /* Type 1 packet, Write, Frame Data Input Register */
+        0x300040CA, /* Type 1 packet, Write, Frame Data Input Register */
         EMPTY_BANK,
+        EMPTY_BANK, /* An empty, not used should be at the end */
         0x30008001, /* Type 1 packet, Write, Command Register */
         0x00000000, /* Null command */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */
-        0x3000C001, /* Type 1 packet, Write, Masking register */
-        0x00200000, /* CTL1 */
-        0x30030001, /* Type 1 packet, Write, Control Register 1 */
-        0x00000000, /* reserved according to the documentation */
         0x30008001, /* Type 1 packet, Write, Command Register */
         0x00000003, /* Last frame: GHIGH_B, interconnects. */
         0x20000000, /* Type 1 packet, NOP, Word count 0 */

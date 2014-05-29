@@ -24,6 +24,10 @@
 #include "xtime_l.h"
 #include "vrc.h"
 
+#if 1
+#define                 ADVEA
+#endif
+
 #define CGP_PI          9
 #define CGP_ROW         4
 #define CGP_BIT         8
@@ -35,9 +39,11 @@
 #define LUT_BITS        64
 #define BANKS           4
 #define CGP_MUTATIONS   4
+#define NOT_MUTATED     (-1)
 
 typedef short chrom_t;
 typedef short func_t;
+typedef short mut_t;
 typedef u32 lut_t;
 
 typedef struct {
@@ -54,11 +60,15 @@ typedef struct {
         chrom_t filter_switch;
         chrom_t out_select;
         fitness_t fitness;
+        mut_t mut_bank;
+        mut_t mut_col;
 } cgp_indiv_t;
 
 extern void init_indiv(cgp_indiv_t *indiv);
 extern void copy_indiv(const cgp_indiv_t *src, cgp_indiv_t *dst);
 extern void indiv_to_fpga(cgp_indiv_t *indiv, int index);
+extern void indiv_to_bitstream(cgp_indiv_t *indiv, int index);
+extern void reconfig_population();
 extern void mutate_indiv(cgp_indiv_t *indiv);
 extern void function_to_bitstream(int col, int row, func_t f0, func_t f1,
                 func_t f2, func_t f3);

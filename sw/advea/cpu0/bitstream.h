@@ -44,15 +44,15 @@
 #define RIGHT_BANK2              &indiv_lut_stream[RBANK2_OFF]
 #define RIGHT_BANK3              &indiv_lut_stream[RBANK3_OFF]
 
-#define POP_HEADER_LINES         33
+#define POP_HEADER_LINES         29
 #define NEXT_HEAD_LINES          7
 
 #define IND0_OFF                 POP_HEADER_LINES
-#define IND1_OFF                 (IND0_OFF + BANK_SIZE + NEXT_HEAD_LINES)
-#define IND2_OFF                 (IND1_OFF + BANK_SIZE + NEXT_HEAD_LINES)
-#define IND3_OFF                 (IND2_OFF + BANK_SIZE + NEXT_HEAD_LINES)
-#define IND4_OFF                 (IND3_OFF + BANK_SIZE + NEXT_HEAD_LINES)
-#define IND5_OFF                 (IND4_OFF + BANK_SIZE + NEXT_HEAD_LINES)
+#define IND1_OFF                 (IND0_OFF + 2*BANK_SIZE + NEXT_HEAD_LINES)
+#define IND2_OFF                 (IND1_OFF + 2*BANK_SIZE + NEXT_HEAD_LINES)
+#define IND3_OFF                 (IND2_OFF + 2*BANK_SIZE + NEXT_HEAD_LINES)
+#define IND4_OFF                 (IND3_OFF + 2*BANK_SIZE + NEXT_HEAD_LINES)
+#define IND5_OFF                 (IND4_OFF + 2*BANK_SIZE + NEXT_HEAD_LINES)
 
 #define IND0_BANK                &popul_mut_stream[IND0_OFF]
 #define IND1_BANK                &popul_mut_stream[IND1_OFF]
