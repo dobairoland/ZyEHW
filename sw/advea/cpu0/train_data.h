@@ -23,6 +23,8 @@
 #ifndef TRAIN_DATA_H
 #define TRAIN_DATA_H
 
+extern const char training_set_name[];
+
 extern void send_training_data();
 
 #endif

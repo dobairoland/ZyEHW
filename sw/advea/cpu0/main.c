@@ -160,6 +160,7 @@ static void find_print_best()
         xil_printf("<generations>%d</generations>\n\r", GENERATIONS);
         xil_printf("<reconfig_generations>%d</reconfig_generations>\n\r",
                         RECONFIG_GENERATIONS);
+        xil_printf("<training_set>%s</training_set>\n\r", training_set_name);
 
         xil_printf("</cgp>\n\r");
 }
