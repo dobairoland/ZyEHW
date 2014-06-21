@@ -36,7 +36,7 @@ static cgp_indiv_t *alpha = NULL;
 static fitness_t alphafitness = ~((fitness_t) 0);
 
 #ifdef ADVEA
-static int unchanged_generations = 0;
+static unsigned short parent_change = 0;
 #endif
 
 static XTime cgp_time_acc = 0;
@@ -127,9 +127,7 @@ static void evaluate_popul_finer_reconfig(u32 *based_on_frame)
                 }
         }
 
-        if ((++unchanged_generations) >= RECONFIG_GENERATIONS) {
-                unchanged_generations = 0;
-
+        if (parent_change) {
                 /* inverse reconfiguration is needed */
                 for (i = 1; i < (1 + CGP_LAMBDA); ++i) {
                         /* the previous elit is established in the
@@ -149,6 +147,10 @@ static void evaluate_popul_finer_reconfig(u32 *based_on_frame)
                 alpha->mut_bank = NOT_MUTATED;
                 init_mut_array();
         }
+
+#ifdef PARENT_SEC_GENER
+        parent_change ^= 1;
+#endif
 }
 #endif
 
@@ -161,8 +163,13 @@ u32 init_popul()
         alphafitness = ~((fitness_t) 0);
         activepopulation = 0;
 
+#ifdef PARENT_SEC_GENER
+        parent_change = 0;
+#else
+        parent_change = 1;
+#endif
+
 #ifdef ADVEA
-        unchanged_generations = 0;
         init_mut_array();
 #endif
 
@@ -191,14 +198,25 @@ void init_popul_with_elit()
 u32 new_popul()
 {
         int i, j, k;
-        cgp_indiv_t *prevalpha = alpha;
+        cgp_indiv_t *prevalpha;
         cgp_indiv_t *indiv;
         u32 frame = 0;
 
-        activepopulation ^= 1;
-
-        alpha = &population[activepopulation][0];
-        copy_indiv(prevalpha, alpha);
+#ifdef PARENT_SEC_GENER
+        if (parent_change) {
+                prevalpha = &population[activepopulation][0];
+                activepopulation ^= 1;
+                copy_indiv(alpha, &population[activepopulation][0]);
+                alpha = &population[activepopulation][0];
+        } else {
+#endif
+                prevalpha = alpha;
+                activepopulation ^= 1;
+                alpha = &population[activepopulation][0];
+                copy_indiv(prevalpha, alpha);
+#ifdef PARENT_SEC_GENER
+        }
+#endif
 
         for (i = 1, k = 0; i < (1 + CGP_LAMBDA); k = i++) {
                 indiv = &population[activepopulation][i];

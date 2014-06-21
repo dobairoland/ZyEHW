@@ -158,8 +158,11 @@ static void find_print_best()
         xil_printf("<mutations>%d</mutations>\n\r", CGP_MUTATIONS);
         xil_printf("<lambda>%d</lambda>\n\r", CGP_LAMBDA);
         xil_printf("<generations>%d</generations>\n\r", GENERATIONS);
-        xil_printf("<reconfig_generations>%d</reconfig_generations>\n\r",
-                        RECONFIG_GENERATIONS);
+#ifdef PARENT_SEC_GENER
+        xil_printf("<parent_sec_gener>on</parent_sec_gener>\n\r");
+#else
+        xil_printf("<parent_sec_gener>off</parent_sec_gener>\n\r");
+#endif
         xil_printf("<training_set>%s</training_set>\n\r", training_set_name);
 
         xil_printf("</cgp>\n\r");

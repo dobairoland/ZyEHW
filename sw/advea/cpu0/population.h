@@ -23,7 +23,9 @@
 #include "indiv.h"
 #include "xtime_l.h"
 
-#define RECONFIG_GENERATIONS    1
+#if 1
+#define PARENT_SEC_GENER
+#endif
 
 extern u32 init_popul();
 extern void init_popul_with_elit();
