@@ -32,8 +32,8 @@ interface (GUI) by running `start_gui` from the Vivado console.
 
 The generation of the hardware configuration bit stream can be initiated by
 running `source rerun.tcl` from the Vivado console. This will take
-approximately 15-30 minutes depending on the performance of your computer. If
-you prefer then you can complete this task manually or from the GUI.
+approximately 15-30 minutes depending on the performance of your computer.
+Based on your preferences you can complete this task manually or from the GUI.
 
 Please make sure that all timing constraints are met. You can do this by
 checking the logs, the timing reports or just making sure that *0 Critical

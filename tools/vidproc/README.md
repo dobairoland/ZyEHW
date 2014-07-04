@@ -38,7 +38,7 @@ in the `sw/vidproc/cpu0/main.c` file).
 You can check the result by playing `i.dat.y4m`
 which was also generated.
 
-Copy `i.dat` to the SD card (and rename it to `oi.dat` for edge detection).
+Copy `i.dat` to the SD card (or rename it to `oi.dat` for edge detection).
 CPU0 will use this file in order to generate the training input for the
 evolution.
 

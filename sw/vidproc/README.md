@@ -1,4 +1,4 @@
-# Software module of ZyEHW (video processing case study)
+# Software module of ZyEHW for the video processing case study
 
 The `sw/vidproc/cpu0` and `sw/vidproc/cpu1` folders contain the code for the
 processors of
