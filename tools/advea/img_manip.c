@@ -31,6 +31,8 @@
 
 #define ROM_CORRECT "correct.txt"
 #define ROM_CORRUPT "corrupt.txt"
+#define C_CORRECT "correct.c"
+#define C_CORRUPT "corrupt.c"
 
 typedef enum {NOP, SALT_PEPPER} option;
 
@@ -67,6 +69,22 @@ static void save_rom_file(const img_t *img, int size, const char *file)
         printf("ROM file %s has been written.\n", file);
 }
 
+static void save_c_file(const img_t *img, int size, const char *file)
+{
+        int i;
+        FILE *f = fopen(file, "w");
+
+        if (!f)
+                return;
+
+        for (i = 0; i < size; ++i) {
+                fprintf(f, "0x%X, \\\n", get_img(img, i));
+        }
+
+        fclose(f);
+        printf("C file %s has been written.\n", file);
+}
+
 static int salt_and_pepper(const char *in, const char *out, int noise_ratio)
 {
         const int noise_arr[] = {SP_NOISE1, SP_NOISE2};
@@ -75,6 +93,7 @@ static int salt_and_pepper(const char *in, const char *out, int noise_ratio)
         int noisenum = (int)((size * noise_ratio) / (float) 100);
 
         save_rom_file(img, size, ROM_CORRECT);
+        save_c_file(img, size, C_CORRECT);
 
         srand(time(NULL));
 
@@ -87,6 +106,7 @@ static int salt_and_pepper(const char *in, const char *out, int noise_ratio)
                                         ]);
 
         save_rom_file(img, size, ROM_CORRUPT);
+        save_c_file(img, size, C_CORRUPT);
 
         write_tif(out, img, size, width);
 
