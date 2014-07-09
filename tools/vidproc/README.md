@@ -1,4 +1,4 @@
-# Tools of ZyEHW
+# Tools of ZyEHW for video processing case study
 
 The input for ZyEHW is the video sequence stored in the card. The output is
 the description of the best evolved filters transferred through the serial
@@ -9,7 +9,7 @@ for speed.
 You will learn in this file how to prepare the training inputs, check the
 validity of the transferred data and generate the filtered video.
 
-The tools can be compiled by running `make` from the `tools` folder.
+The tools can be compiled by running `make` from the `tools/vidproc` folder.
 
 ## Preparing training inputs
 
