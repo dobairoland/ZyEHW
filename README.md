@@ -7,7 +7,7 @@ evolvable hardware (EHW).
 
 ZyEHW is the result of our ongoing research and intends to demonstrate our
 scientific results. Some of these results were already published (you can find
-a list of related publications in this file). More papers will follow soon.
+a list of related publications in this file).
 ZyEHW does not contain the descriptions of our developed methods. Please read
 our papers if you want to find out more about our methods.
 
@@ -78,6 +78,20 @@ for video processing. Other dependencies include [gcc](http://gcc.gnu.org),
 
 ## Related publications
 
+1. R. Dobai, L. Sekanina: [Low-Level Flexible Architecture with Hybrid
+Reconfiguration for Evolvable Hardware][trets15], In: ACM Transactions on
+Reconfigurable Technology and Systems, vol. 8, no. 3, art. no. 20, 2015.
+
+1. R. Dobai, K. Glette, J. Torresen, L. Sekanina: [Evolutionary Digital
+Circuit Design with Fast Candidate Solution Establishment in Field
+Programmable Gate Arrays][ices14], In: 2014 IEEE International Conference
+on Evolvable Systems, 85-92, 2014.
+
+1. R. Dobai: [Evolutionary On-line Synthesis of Hardware Accelerators for
+Software Modules in Reconfigurable Embedded Systems][fpl14], In: 2014 24th
+International Conference on Field Programmable Logic and Applications
+(FPL), 2014.
+
 1. R. Dobai, L. Sekanina: [Image Filter Evolution on the Xilinx Zynq
 Platform][ahs13], In: 2013 NASA/ESA Conference on Adaptive Hardware and
 Systems, 164-171, 2013.
@@ -88,6 +102,9 @@ Platform][ices13], In: 2013 IEEE International Conference on Evolvable Systems
 
 [ahs13]: http://dx.doi.org/10.1109/AHS.2013.6604241
 [ices13]: http://dx.doi.org/10.1109/ICES.2013.6613287
+[fpl14]: http://dx.doi.org/10.1109/FPL.2014.6927455
+[ices14]: http://dx.doi.org/10.1109/ICES.2014.7008726
+[trets15]: http://dx.doi.org/10.1145/2700414
 
 ## Contact
 
